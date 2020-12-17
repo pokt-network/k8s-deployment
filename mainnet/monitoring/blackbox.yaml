@@ -1,0 +1,126 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-blackbox-exporter
+  namespace: monitoring
+  labels:
+    app: prometheus-blackbox-exporter
+data:
+  blackbox.yaml: |
+    modules:
+      node4_jailed:
+        http:
+          method: POST
+          body: '{"address": "d46556719200aee73fc7446731ae58496978548d"}'
+          fail_if_body_matches_regexp:
+          - "jailed\":true"     
+          valid_status_codes: []
+        prober: http
+        timeout: 5s
+      node5_jailed:
+        http:
+          method: POST
+          body: '{"address": "5bcae50364952a5fa3a8363f93f2adffc9eff42e"}'
+          fail_if_body_matches_regexp:
+          - "jailed\":true"     
+          valid_status_codes: []
+        prober: http
+        timeout: 5s
+      node4_unstaked:
+        http:
+          method: POST
+          body: '{"address": "d46556719200aee73fc7446731ae58496978548d"}'
+          fail_if_body_matches_regexp:
+          - "tokens\":\ \"0\""     
+          valid_status_codes: []
+        prober: http
+        timeout: 5s
+      node5_unstaked:
+        http:
+          method: POST
+          body: '{"address": "5bcae50364952a5fa3a8363f93f2adffc9eff42e"}'
+          fail_if_body_matches_regexp:
+          - "tokens\":\ \"0\""     
+          valid_status_codes: []
+        prober: http
+        timeout: 5s
+---
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: monitoring
+  name: prometheus-blackbox-exporter
+  labels:
+    app: prometheus-blackbox-exporter
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 9115
+      protocol: TCP
+  selector:
+    app: prometheus-blackbox-exporter
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus-blackbox-exporter
+  namespace: monitoring
+  labels:
+    app: prometheus-blackbox-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus-blackbox-exporter
+  template:
+    metadata:
+      labels:
+        app: prometheus-blackbox-exporter
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: blackbox-exporter
+          image: "prom/blackbox-exporter:v0.15.1"
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1000
+          args:
+            - "--config.file=/config/blackbox.yaml"
+          resources:
+            {}
+          ports:
+            - containerPort: 9115
+              name: http
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          volumeMounts:
+            - mountPath: /config
+              name: config
+        - name: configmap-reload
+          image: "jimmidyson/configmap-reload:v0.2.2"
+          imagePullPolicy: "IfNotPresent"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+          args:
+            - --volume-dir=/etc/config
+            - --webhook-url=http://localhost:9115/-/reload
+          resources:
+            {}
+          volumeMounts:
+            - mountPath: /etc/config
+              name: config
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: prometheus-blackbox-exporter

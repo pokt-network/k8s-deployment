@@ -1,0 +1,70 @@
+coreDns:
+  enabled: false
+
+kubeDns:
+  enabled: true
+
+alertmanager:
+  alertmanagerSpec:
+    storage:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 30Gi
+
+prometheus:
+  prometheusSpec:
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 30Gi
+    additionalScrapeConfigsSecret:
+      enabled: true
+      name: additional-scrape-configs
+      key: prometheus-additional.yaml
+
+grafana:
+  adminPassword: "WO9H1dik4oXD&hXe@P7vKJm1"
+  ingress:
+    enabled: true 
+    annotations:
+      kubernetes.io/ingress.global-static-ip-name: "grafana-mainnet"
+      kubernetes.io/ingress.class: "gce"
+      ingress.kubernetes.io/force-ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/rewrite-target: /$1
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+
+    hosts:
+      - grafana-mon.mainnet.pokt.network
+
+    tls:
+      - secretName: mainnet-certificate
+        hosts:
+          - grafana-mon.mainnet.pokt.network
+  persistence:
+    enabled: true
+    accessModes: ["ReadWriteOnce"]
+    size: 30Gi
+
+scrape_configs:
+  - job_name: 'blackbox'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]  # Look for a HTTP 200 response.
+    static_configs:
+      - targets:
+        - http://prometheus.io    # Target to probe with http.
+        - https://prometheus.io   # Target to probe with https.
+        - http://example.com:8080 # Target to probe with http on port 8080.
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 127.0.0.1:9115  # The blackbox exporter's real hostname:port.

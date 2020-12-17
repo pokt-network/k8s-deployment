@@ -1,0 +1,10 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: pocket-core
+  labels:
+    persistency: "true"
+provisioner: kubernetes.io/gce-pd
+allowVolumeExpansion: true
+parameters:
+  type: pd-ssd

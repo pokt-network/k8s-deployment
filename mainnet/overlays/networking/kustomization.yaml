@@ -1,0 +1,7 @@
+resources:
+  - ./gateway-peers.yaml
+  - ./gateway-pocket.yaml
+  - ./upstreams-pocket-core.yaml
+  - ./upstreams-grafana.yaml
+  - ./virtualservices-pocket-core.yaml
+  - ./virtualservices-grafana.yaml

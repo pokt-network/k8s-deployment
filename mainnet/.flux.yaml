@@ -1,0 +1,9 @@
+version: 1 
+patchUpdated:
+  generators:
+  - command: for I in overlays/*/node-key-secret.enc.yaml; do sops -d --output "${I%*enc.yaml}yaml" $I; done
+  - command: for I in overlays/*/priv-val-key-secret.enc.yaml; do sops -d --output "${I%*enc.yaml}yaml" $I; done
+  - command: kustomize build --load_restrictor=none
+  - command: for I in overlays/*/node-key-secret.yaml; do rm $I; done
+  - command: for I in overlays/*/priv-val-key-secret.yaml; do rm $I; done
+  patchFile: flux-patch.yaml

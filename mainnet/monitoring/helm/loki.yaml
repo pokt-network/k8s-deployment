@@ -1,0 +1,52 @@
+   auth_enabled: false
+
+   server:
+     http_listen_port: 3100
+
+   ingester:
+     max_transfer_retries: 0 # Disable blocks transfers on ingesters shutdown or rollout.
+     chunk_idle_period: 2h # Let chunks sit idle for at least 2h before flushing, this helps to reduce total chunks in store
+     max_chunk_age: 2h  # Let chunks get at least 2h old before flushing due to age, this helps to reduce total chunks in store
+     chunk_target_size: 1048576 # Target chunks of 1MB, this helps to reduce total chunks in store
+     chunk_retain_period: 30s
+
+     query_store_max_look_back_period: 0  # This will allow the ingesters to query the store for all data
+     lifecycler:
+       address: 0.0.0.0
+       ring:
+         kvstore:
+           store: inmemory
+         replication_factor: 1 # This can be increased and probably should if you are running multiple machines!
+
+   schema_config:
+    configs:
+       - from: 2018-04-15
+         store: boltdb-shipper 
+         object_store: gcs 
+         schema: v11
+         index:
+           prefix: index_
+           period: 24h
+
+
+   storage_config:
+     
+     gcs:
+       bucket_name: loki-mainnet-storage
+
+     boltdb_shipper:
+       active_index_directory: /data/loki/index
+       shared_store: gcs
+       cache_location: /data/loki/boltdb-cache
+
+   limits_config:
+     enforce_metric_name: false
+     reject_old_samples: true
+     reject_old_samples_max_age: 336h
+
+   chunk_store_config:
+     max_look_back_period: 0s  # No limit how far we can look back in the store
+
+   table_manager:
+     retention_deletes_enabled: true
+     retention_period: 3648h  # No deletions, infinite retention

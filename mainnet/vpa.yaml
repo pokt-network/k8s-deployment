@@ -1,0 +1,48 @@
+# We assume that the vertical pod scaling option is activated on the cluster. For more info:
+# https://cloud.google.com/kubernetes-engine/docs/how-to/vertical-pod-autoscaling
+# https://cloud.google.com/kubernetes-engine/docs/concepts/verticalpodautoscaler
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  namespace: mainnet
+  name: pocket-core-4 
+spec:
+  resourcePolicy:
+    containerPolicies:
+    - containerName: 'pocket-core'
+      minAllowed:
+        memory: 500Mi
+        cpu: 500m
+      maxAllowed:
+        memory: 11Gi
+        cpu: 3800m
+
+  targetRef:
+    apiVersion: "apps/v1"
+    kind:       Deployment
+    name:       pocket-core-4
+  updatePolicy:
+    updateMode: "Auto"
+---
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  namespace: mainnet
+  name: pocket-core-5 
+spec:
+  resourcePolicy:
+    containerPolicies:
+    - containerName: 'pocket-core'
+      minAllowed:
+        memory: 500Mi
+        cpu: 500m
+      maxAllowed:
+        memory: 11Gi
+        cpu: 3800m
+
+  targetRef:
+    apiVersion: "apps/v1"
+    kind:       Deployment
+    name:       pocket-core-5 
+  updatePolicy:
+    updateMode: "Auto"

@@ -1,0 +1,23 @@
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: grafana 
+  namespace: gw-mainnet 
+spec:
+  virtualHost:
+    domains:
+      - 'grafana-mon.mainnet.pokt.network'
+    routes:
+    - matchers:
+       - prefix: /
+      route_action:
+        single:
+          upstream:
+            name: monitoring-prometheus-operator-grafana-80 
+            namespace: gw-mainnet
+      options:
+        timeout: '300s' 
+  ssl_config:
+    secret_ref:
+      name:  mainnet-grafana-certificate 
+      namespace: gw-mainnet 

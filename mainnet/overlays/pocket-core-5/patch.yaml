@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pocket-core
+  labels:
+    nodetype: validator 
+spec:
+  template:
+    spec:
+      volumes:
+        - name: pocket-core-data
+          persistentVolumeClaim:
+            claimName: pocket-core-data-5
+        - name: pocket-core-config
+          configMap:
+            name: pocket-core-config-5
+        - name: pocket-core-node-key
+          secret:
+            secretName: pocket-core-node-key5
+        - name: pocket-core-priv-val-key
+          secret:
+            secretName: pocket-core-priv-val-key5

@@ -1,0 +1,147 @@
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: pocket-core-mainnet4-https
+  namespace: gw-mainnet 
+spec:
+  virtualHost:
+    options:
+      transformations:
+        requestTransformation:
+          transformationTemplate:
+            ignoreErrorOnParse: true
+            dynamicMetadataValues:
+              - key: 'request_body'
+                value:
+                  text: '{{ body() }}'
+        responseTransformation:
+          transformationTemplate:
+            ignoreErrorOnParse: true
+            dynamicMetadataValues:
+              - key: 'response_body'
+                value:
+                  text: '{{ body() }}'
+      cors:
+        allowHeaders:
+        - origin
+        - accept
+        - content-type
+        - authorization
+        - x-csrf-token
+        allowMethods:
+        - POST 
+        - OPTIONS 
+        allowOrigin:
+        - '*'
+        maxAge: 1d
+    domains:
+      - 'node4.mainnet.pokt.network'
+    routes:
+    - matchers:
+       - exact: /v1
+      route_action:
+        single:
+          upstream:
+            name: mainnet-pocket-core-4-80
+            namespace: gw-mainnet
+    - matchers:
+       - prefix: /v1/client/relay
+      route_action:
+        single:
+          upstream:
+            name: mainnet-pocket-core-4-80
+            namespace: gw-mainnet
+      options:
+        timeout: '300s'
+    - matchers:
+       - prefix: /v1/client/challenge
+      route_action:
+        single:
+          upstream:
+            name: mainnet-pocket-core-4-80
+            namespace: gw-mainnet
+    - matchers:
+       - prefix: /v1/client/dispatch
+      route_action:
+        single:
+          upstream:
+            name: mainnet-pocket-core-4-80
+            namespace: gw-mainnet
+  ssl_config:
+    secret_ref:
+      name: mainnet-certificate 
+      namespace: gw-mainnet
+---
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: pocket-core-mainnet5-https
+  namespace: gw-mainnet 
+spec:
+  virtualHost:
+    options:
+      transformations:
+        requestTransformation:
+          transformationTemplate:
+            ignoreErrorOnParse: true
+            dynamicMetadataValues:
+              - key: 'request_body'
+                value:
+                  text: '{{ body() }}'
+        responseTransformation:
+          transformationTemplate:
+            ignoreErrorOnParse: true
+            dynamicMetadataValues:
+              - key: 'response_body'
+                value:
+                  text: '{{ body() }}'
+      cors:
+        allowHeaders:
+        - origin
+        - accept
+        - content-type
+        - authorization
+        - x-csrf-token
+        allowMethods:
+        - POST 
+        - OPTIONS 
+        allowOrigin:
+        - '*'
+        maxAge: 1d
+    domains:
+      - 'node5.mainnet.pokt.network'
+    routes:
+    - matchers:
+       - exact: /v1
+      route_action:
+        single:
+          upstream:
+            name: mainnet-pocket-core-5-80
+            namespace: gw-mainnet
+    - matchers:
+       - prefix: /v1/client/relay
+      route_action:
+        single:
+          upstream:
+            name: mainnet-pocket-core-5-80
+            namespace: gw-mainnet
+      options:
+        timeout: '300s'
+    - matchers:
+       - prefix: /v1/client/challenge
+      route_action:
+        single:
+          upstream:
+            name: mainnet-pocket-core-5-80
+            namespace: gw-mainnet
+    - matchers:
+       - prefix: /v1/client/dispatch
+      route_action:
+        single:
+          upstream:
+            name: mainnet-pocket-core-5-80
+            namespace: gw-mainnet
+  ssl_config:
+    secret_ref:
+      name: mainnet-certificate 
+      namespace: gw-mainnet

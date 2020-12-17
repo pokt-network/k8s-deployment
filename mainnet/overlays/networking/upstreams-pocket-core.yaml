@@ -1,0 +1,59 @@
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  annotations:
+  labels:
+    app: pocket-core-4
+    discovered_by: kubernetesplugin
+    discovery.solo.io/function_discovery: enabled
+    env: mainnet
+  name: mainnet-pocket-core-4-80
+  namespace: gw-mainnet
+spec:
+  discoveryMetadata: {}
+  # for more info: https://www.envoyproxy.io/docs/envoy/latest/api-v2/api/v2/cluster/circuit_breaker.proto#envoy-api-msg-cluster-circuitbreakers 
+  circuitBreakers:
+    maxConnections: 10024
+    maxPendingRequests: 1024
+    maxRequests: 10024
+    maxRetries: 3
+  kube:
+    selector:
+      app: pocket-core-4
+      env: mainnet
+    serviceName: pocket-core-4
+    serviceNamespace: mainnet
+    servicePort: 80
+status:
+  reported_by: gloo
+  state: 1
+---
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  annotations:
+  labels:
+    app: pocket-core-5
+    discovered_by: kubernetesplugin
+    discovery.solo.io/function_discovery: enabled
+    env: mainnet
+  name: mainnet-pocket-core-5-80
+  namespace: gw-mainnet
+spec:
+  discoveryMetadata: {}
+  # for more info: https://www.envoyproxy.io/docs/envoy/latest/api-v2/api/v2/cluster/circuit_breaker.proto#envoy-api-msg-cluster-circuitbreakers 
+  circuitBreakers:
+    maxConnections: 10024
+    maxPendingRequests: 1024
+    maxRequests: 10024
+    maxRetries: 3
+  kube:
+    selector:
+      app: pocket-core-5
+      env: mainnet
+    serviceName: pocket-core-5
+    serviceNamespace: mainnet
+    servicePort: 80
+status:
+  reported_by: gloo
+  state: 1

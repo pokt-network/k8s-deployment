@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+    labels:
+       gloo: gateway-proxy
+    name: gateway-proxy-prom
+    namespace: gw-mainnet
+spec:
+    ports:
+      - name: prometheus 
+        protocol: TCP
+        port: 8081 
+        targetPort: 8081
+    type: ClusterIP 
+    selector:
+      gloo: gateway-proxy

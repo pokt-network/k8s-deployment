@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    persistency: "true"
+  name: pocket-core
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: name
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        persitency: "true"
+    spec:
+      initContainers:
+        - name: copy-configs
+          image: google/cloud-sdk:313.0.0 
+          command: ['sh', '-c', 'cp /tmp/key/priv_val_key.json /tmp/node/node_key.json /home/app/.pocket/ && mkdir -p /home/app/.pocket/config/ && cp /tmp/*.json /home/app/.pocket/config/ && echo {} > /home/app/.pocket/priv_val_state.json   && echo "Verifying if data folder is not empty. If its not empty, this command exits and resume pocket run" && mkdir -p /home/app/.pocket/data/ && find /home/app/.pocket/data/ -maxdepth 0 -empty -exec echo {} is empty. \; | grep "empty" && echo "Downloading blockchain data" || exit 0 && cd /home/app/.pocket/data && rm -rf * &&  gsutil cp  gs://blockchains-data/pocket-network-mainnet-latest.tar ./pocket-network-mainnet.tar && echo "Downloaded pocket network blockchain.tar file now decompressing" && tar -xf pocket-network-mainnet.tar && rm  ./pocket-network-mainnet.tar && echo "deleted compressed file .. exiting"']
+          volumeMounts:
+            - mountPath: /home/app/.pocket
+              name: pocket-core-data
+            - mountPath: /tmp
+              name: pocket-core-config
+            - mountPath: /tmp/node
+              name: pocket-core-node-key
+            - mountPath: /tmp/key
+              name: pocket-core-priv-val-key
+      containers:
+        - name: pocket-core
+          args:
+            - --datadir=/home/app/.pocket 
+            - --mainnet 
+            - --keybase=false
+          image: gcr.io/pocket-core-mainnet/mainnet-container:a63e91d
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 26657
+              name: tendermint
+            - containerPort: 8081
+              name: pocket
+            - containerPort: 26656
+              name: tendermintpeers
+            - containerPort: 26660 
+              name: grafana 
+          volumeMounts:
+            - mountPath: /home/app/.pocket
+              name: pocket-core-data
+          resources:
+            requests:
+              cpu: 500m
+              memory: 500Mi
+      restartPolicy: Always
+      nodeSelector:
+        cloud.google.com/gke-nodepool: pocket-core

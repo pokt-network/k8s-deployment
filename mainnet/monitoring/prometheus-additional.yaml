@@ -1,0 +1,100 @@
+- job_name: "jailed"
+  scrape_interval: 15s
+  metrics_path: /probe
+  static_configs:
+    - targets:
+        - node4_jailed,http://pocket-core-5.mainnet:8081/v1/query/node
+        - node4_jailed,http://pocket-core-4.mainnet:8081/v1/query/node
+        - node5_jailed,http://pocket-core-5.mainnet:8081/v1/query/node
+        - node5_jailed,http://pocket-core-4.mainnet:8081/v1/query/node
+  relabel_configs:
+    - source_labels: [__address__]
+      target_label: __param_target
+    - source_labels: [__address__]
+      regex: ([^,]*),(.*)
+      replacement: $1
+      target_label: __param_module
+    - source_labels: [__address__]
+      regex: ([^,]*),(.*)
+      replacement: $2
+      target_label: __param_target
+    - source_labels: [__param_module]
+      target_label: probe
+    - source_labels: [__param_target]
+      target_label: instance
+    - target_label: __address__
+      replacement: prometheus-blackbox-exporter:9115
+- job_name: "unstaked"
+  scrape_interval: 15s
+  metrics_path: /probe
+  static_configs:
+    - targets:
+        - node4_unstaked,http://pocket-core-4.mainnet:8081/v1/query/node
+        - node4_unstaked,http://pocket-core-5.mainnet:8081/v1/query/node
+        - node5_unstaked,http://pocket-core-5.mainnet:8081/v1/query/node
+        - node5_unstaked,http://pocket-core-4.mainnet:8081/v1/query/node
+  relabel_configs:
+    - source_labels: [__address__]
+      target_label: __param_target
+    - source_labels: [__address__]
+      regex: ([^,]*),(.*)
+      replacement: $1
+      target_label: __param_module
+    - source_labels: [__address__]
+      regex: ([^,]*),(.*)
+      replacement: $2
+      target_label: __param_target
+    - source_labels: [__param_module]
+      target_label: probe
+    - source_labels: [__param_target]
+      target_label: instance
+    - target_label: __address__
+      replacement: prometheus-blackbox-exporter:9115
+- job_name: "uptime-validators"
+  scrape_interval: 15s
+  metrics_path: /probe
+  static_configs:
+    - targets:
+        - http_2xx,http://pocket-core-4.mainnet:8081/v1
+        - http_2xx,http://pocket-core-5.mainnet:8081/v1
+  relabel_configs:
+    - source_labels: [__address__]
+      target_label: __param_target
+    - source_labels: [__address__]
+      regex: ([^,]*),(.*)
+      replacement: $1
+      target_label: __param_module
+    - source_labels: [__address__]
+      regex: ([^,]*),(.*)
+      replacement: $2
+      target_label: __param_target
+    - source_labels: [__param_module]
+      target_label: probe
+    - source_labels: [__param_target]
+      target_label: instance
+    - target_label: __address__
+      replacement: prometheus-blackbox-exporter:9115
+- job_name: "uptime-validators-external"
+  scrape_interval: 15s
+  metrics_path: /probe
+  static_configs:
+    - targets:
+        - http_2xx,https://node4.mainnet.pokt.network/v1
+        - http_2xx,https://node5.mainnet.pokt.network/v1
+  relabel_configs:
+    - source_labels: [__address__]
+      target_label: __param_target
+    - source_labels: [__address__]
+      regex: ([^,]*),(.*)
+      replacement: $1
+      target_label: __param_module
+    - source_labels: [__address__]
+      regex: ([^,]*),(.*)
+      replacement: $2
+      target_label: __param_target
+    - source_labels: [__param_module]
+      target_label: probe
+    - source_labels: [__param_target]
+      target_label: instance
+    - target_label: __address__
+      replacement: prometheus-blackbox-exporter:9115

@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: mainnet-certificate 
+  namespace: gw-mainnet 
+spec:
+  secretName: mainnet-certificate 
+  issuerRef:
+    # The issuer created previously
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+  - node4.mainnet.pokt.network
+  - node5.mainnet.pokt.network
+  - grafana-mon.mainnet.pokt.network

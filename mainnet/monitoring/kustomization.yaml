@@ -1,0 +1,11 @@
+resources:
+  - ./blackbox.yaml
+
+secretGenerator:
+  - name: additional-scrape-configs
+    files:
+      - ./prometheus-additional.yaml
+generatorOptions:
+  disableNameSuffixHash: true
+
+namespace: monitoring

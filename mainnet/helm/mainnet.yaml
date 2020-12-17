@@ -1,0 +1,52 @@
+crds:
+  create:  true 
+accessLogger:
+  enabled: true
+gatewayProxies:
+  gatewayProxy:
+    kind:
+      deployment:
+        replicas: 1
+    podTemplate:
+      extraPorts:
+      - name: tendermint
+        containerPort: 26657
+      - name: pocket
+        containerPort: 8081
+      - name: peers
+        containerPort: 26656
+    service:
+      loadBalancerIP: "35.188.235.118"
+      extraPorts:
+      - name: tendermint
+        protocol: TCP
+        nodePort: 31343
+        port: 26657
+      - name: pocket
+        protocol: TCP
+        nodePort: 31343
+        port: 8081
+      - name: peers
+        protocol: TCP
+        nodePort: 31344
+        port: 26656
+      type: LoadBalancer
+ingress:
+  customIngressClass: gloo-mainnet 
+  deployment:
+    replicas: 1
+    extraPorts:
+    - name: tendermint
+      containerPort: 26657
+    - name: pocket
+      containerPort: 8081
+    - name: peers
+      containerPort: 26656
+  enabled:  false 
+  requireIngressClass: gloo-mainnet
+settings:
+  create: true
+  writeNamespace: gw-mainnet 
+  watchNamespaces:
+  - gw-mainnet
+  - mainnet

@@ -1,0 +1,7 @@
+resources:
+  - ./overlays
+  - ./monitoring
+  - ./monitoring/tendermint-servicemonitor.yaml
+  - ./overlays/networking
+  - ./storage-class.yaml
+  - ./vpa.yaml

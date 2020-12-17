@@ -1,0 +1,32 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: pocket-core-mainnet4
+  namespace: mainnet 
+  labels:
+    app: pocket-core-4
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: pocket-core-4 # target gitlab service
+  endpoints:
+  - port: prometheus
+    interval: 15s
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: pocket-core-mainnet5
+  namespace: mainnet 
+  labels:
+    app: pocket-core-5
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: pocket-core-5 # target gitlab service
+
+  endpoints:
+  - port: prometheus
+    interval: 15s

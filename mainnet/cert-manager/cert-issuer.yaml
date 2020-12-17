@@ -1,0 +1,25 @@
+apiVersion: v1
+items:
+  - apiVersion: cert-manager.io/v1alpha2
+    kind: ClusterIssuer
+    metadata:
+      annotations:
+        acme.cert-manager.io/http01-edit-in-place: "true"
+      name: letsencrypt-prod
+      namespace: cert-manager
+    spec:
+      acme:
+        server: https://acme-v02.api.letsencrypt.org/directory
+        email: lowell@pokt.network
+        privateKeySecretRef:
+          name: letsencrypt-prod
+        solvers:
+          - dns01:
+              clouddns:
+                project: pocket-core-mainnet 
+                serviceAccountSecretRef:
+                  name: clouddns-dns01-solver-svc-acct
+                  key: key.json
+
+kind: List
+metadata: {}

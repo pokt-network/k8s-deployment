@@ -1,0 +1,23 @@
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  annotations:
+  labels:
+    app: grafana-monitoring 
+    discovered_by: kubernetesplugin
+    discovery.solo.io/function_discovery: enabled
+    env: mainnet
+  name: grafana-monitoring 
+  namespace: gw-mainnet
+spec:
+  discoveryMetadata: {}
+  # for more info: https://www.envoyproxy.io/docs/envoy/latest/api-v2/api/v2/cluster/circuit_breaker.proto#envoy-api-msg-cluster-circuitbreakers 
+  kube:
+    selector:
+      meta.helm.sh/release-name: prometheus-operator
+    serviceName: prometheus-operator-grafana
+    serviceNamespace: monitoring
+    servicePort: 80
+status:
+  reported_by: gloo
+  state: 1

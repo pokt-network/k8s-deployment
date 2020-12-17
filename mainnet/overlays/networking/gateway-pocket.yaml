@@ -1,0 +1,115 @@
+apiVersion: gateway.solo.io/v1
+kind: Gateway
+metadata:
+  annotations:
+    origin: default
+  name: gateway-proxy
+  namespace: gw-mainnet
+spec:
+  bindAddress: '::'
+  bindPort: 8080
+  proxyNames: 
+    - gateway-proxy
+  ssl: false 
+  useProxyProto: false
+  httpGateway:
+    options:
+      # WAF: https://docs.solo.io/gloo/latest/guides/security/waf/
+      waf:
+        customInterventionMessage: 'Thanks for trying! We are watching ;)'
+        ruleSets:
+        - ruleStr: |
+            # Turn rule engine on
+            SecRuleEngine On
+            SecRule REQUEST_HEADERS:User-Agent "scammer" "deny,status:403,id:107,phase:1,msg:'blocked scammer'"
+      # GZIP compression: https://docs.solo.io/gloo/latest/installation/advanced_configuration/gzip/
+      grpcWeb:
+        disable: true
+  proxyNames: 
+    - gateway-proxy
+  useProxyProto: false
+  options:
+    # Access logging https://docs.solo.io/gloo/latest/guides/security/access_logging/
+    accessLoggingService:
+      accessLog:
+      - fileSink:
+          path: /dev/stdout
+          jsonFormat:
+            start_time: "[%START_TIME%]"
+            duration: "%DURATION%"
+            host: "%REQ(:AUTHORITY)%"            
+            path: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
+            protocol: "%PROTOCOL%"
+            method: "%REQ(:METHOD)%"
+            bytes_sent: "%BYTES_SENT%"
+            response_code: "%RESPONSE_CODE%"
+            user_agent: "%REQ(user-agent)%"
+            messageType: '%REQ(x-type)%'
+            number: '%REQ(x-number)%'
+            response_flag: '%RESPONSE_FLAGS%'
+            request: "%REQ(X-Content-Type)%"
+            request_body: '%DYNAMIC_METADATA(io.solo.transformation:request_body)%' 
+            response_body: '%DYNAMIC_METADATA(io.solo.transformation:response_body)%' 
+            request_id: "%REQ(X-REQUEST-ID)%"
+    perConnectionBufferLimitBytes: 1000000000
+---
+apiVersion: gateway.solo.io/v1
+kind: Gateway
+metadata:
+  annotations:
+    origin: default
+  name: gateway-proxy-ssl
+  namespace: gw-mainnet
+spec:
+  bindAddress: '::'
+  bindPort: 8443
+  httpGateway:
+    options:
+      # WAF: https://docs.solo.io/gloo/latest/guides/security/waf/
+      waf:
+        customInterventionMessage: 'Thanks for trying! We are watching...'
+        ruleSets:
+        - ruleStr: |
+            # Turn rule engine on
+            SecRuleEngine On
+            SecRule REQUEST_HEADERS:User-Agent "scammer" "deny,status:403,id:107,phase:1,msg:'blocked scammer'"
+      # GZIP compression: https://docs.solo.io/gloo/latest/installation/advanced_configuration/gzip/
+      grpcWeb:
+        disable: true
+    virtualServices:
+      - name: pocket-core-mainnet4-https
+        namespace: gw-mainnet 
+      - name: pocket-core-mainnet5-https
+        namespace: gw-mainnet 
+  proxyNames: 
+    - gateway-proxy
+  ssl: true
+  useProxyProto: false
+  options:
+    # Access logging https://docs.solo.io/gloo/latest/guides/security/access_logging/
+    #
+    accessLoggingService:
+      accessLog:
+      - fileSink:
+          path: /dev/stdout
+          jsonFormat:
+            start_time: "[%START_TIME%]"
+            duration: "%DURATION%"
+            host: "%REQ(:AUTHORITY)%"            
+            path: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
+            protocol: "%PROTOCOL%"
+            method: "%REQ(:METHOD)%"
+            bytes_sent: "%BYTES_SENT%"
+            response_code: "%RESPONSE_CODE%"
+            user_agent: "%REQ(user-agent)%"
+            messageType: '%REQ(x-type)%'
+            number: '%REQ(x-number)%'
+            response_flag: '%RESPONSE_FLAGS%'
+            request: "%REQ(X-Content-Type)%"
+            request_body: '%DYNAMIC_METADATA(io.solo.transformation:request_body)%' 
+            response_body: '%DYNAMIC_METADATA(io.solo.transformation:response_body)%' 
+            request_id: "%REQ(X-REQUEST-ID)%"
+    perConnectionBufferLimitBytes: 1000000000
+status:
+  reported_by: gateway
+  state: 1

@@ -1,0 +1,21 @@
+# kind: PrefixSuffixTransformer
+nameSuffix: "-5"
+commonLabels:
+  app: pocket-core-5
+bases:
+  - ../../base/
+
+
+configMapGenerator:
+- name: pocket-core-config-5
+  files:
+  - ../chains.json
+  - ./config.json
+patchesStrategicMerge:
+  - ./patch.yaml
+resources:
+  - ./node-key-secret.yaml
+  - ./priv-val-key-secret.yaml
+
+
+
