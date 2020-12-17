@@ -56,13 +56,21 @@ Keep in mind that all changes made to this repo will affect the `pocket-infra` G
     │   │   ├── config.json
     │   │   ├── kustomization.yaml
     │   │   ├── node-key-secret.enc.yaml
+    │   │   ├── node-key-secret.yaml
+    │   │   ├── node_key.json
     │   │   ├── patch.yaml
-    │   │   └── priv-val-key-secret.enc.yaml
+    │   │   ├── priv-val-key-secret.enc.yaml
+    │   │   ├── priv-val-key-secret.yaml
+    │   │   └── priv_val_key.json
     │   └── pocket-core-5
     │       ├── config.json
     │       ├── kustomization.yaml
     │       ├── node-key-secret.enc.yaml
+    │       ├── node-key-secret.yaml
+    │       ├── node_key.json
     │       ├── patch.yaml
-    │       └── priv-val-key-secret.enc.yaml
+    │       ├── priv-val-key-secret.enc.yaml
+    │       ├── priv-val-key-secret.yaml
+    │       └── priv_val_key.json
     ├── storage-class.yaml
     └── vpa.yaml
