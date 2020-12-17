@@ -19,9 +19,8 @@ tags
 # Persistent undo
 [._]*.un~
 # Private keys
-node_key.json
-priv_val_key.json
-*secret.yaml
+
+
 .terraform
 *terraform.tfstate*
 sa.json
