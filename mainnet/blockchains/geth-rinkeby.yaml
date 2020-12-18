@@ -1,0 +1,144 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      app: geth-rinkeby
+    name: geth-rinkeby
+  spec:
+    ports:
+    - name: "8545"
+      port: 8545
+      targetPort: 8545
+    type: ClusterIP
+    selector:
+      app: geth-rinkeby
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      app: geth-rinkeby
+    name: geth-rinkeby-external
+  spec:
+    ports:
+    - name: "rcp"
+      port:  8545
+      targetPort: 8545
+    - name: "ws"
+      port: 8546
+      targetPort: 8546
+    type: ExternalName
+    externalName: geth-rinkeby.blockchain.svc.cluster.local
+    selector:
+      app: geth-rinkeby
+  status:
+    loadBalancer: {}
+- apiVersion: apps/v1 
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      app: geth-rinkeby
+      env: blockchain
+      blockchain: rinkeby
+    name: geth-rinkeby
+  spec:
+    replicas: 1
+    strategy:
+      type: Recreate
+    selector:
+      matchLabels:
+        app: geth-rinkeby
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: geth-rinkeby
+      spec:
+        containers:
+        - args: ["--rinkeby", "--rpc", "--rpcapi", "eth,net,web3", "--rpcaddr", "0.0.0.0", "--rpcport", "8545", "--rpcvhosts=*", "--syncmode", "full", "--gcmode", "archive", "--datadir", ".rinkeby", "--verbosity", "3"]
+          image: ethereum/client-go:v1.9.21
+          name: geth-rinkeby
+          resources:
+            limits:
+              cpu: "1000m"
+              memory: "4Gi"
+            requests:
+              cpu: "500m"
+              memory: "2Gi"
+          volumeMounts:
+          - mountPath: /.rinkeby
+            name: geth-rinkeby
+          ports:
+          - name: rpc
+            containerPort: 8545
+          - name: ws
+            containerPort: 8546
+          - name: p2p
+            containerPort: 30303
+          livenessProbe:
+            tcpSocket:
+              port: 8545
+            initialDelaySeconds: 10
+            periodSeconds: 5
+        restartPolicy: Always
+        nodeSelector:
+          cloud.google.com/gke-nodepool: blockchain-nodes
+        volumes:
+        - name: geth-rinkeby
+          persistentVolumeClaim:
+            claimName: geth-rinkeby
+  status: {}
+- apiVersion: storage.k8s.io/v1
+  kind: StorageClass
+  metadata:
+    name: geth-rinkeby
+  provisioner: pd.csi.storage.gke.io 
+  allowVolumeExpansion: true
+  parameters:
+    type: pd-balanced
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    name: geth-rinkeby
+  spec:
+    storageClassName: "geth-rinkeby"
+    capacity:
+      storage: 700Gi
+    accessModes:
+      - ReadWriteOnce
+    claimRef:
+      namespace: blockchain
+      name: geth-rinkeby
+    gcePersistentDisk:
+      pdName: geth-rinkeby-data
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: geth-rinkeby
+    labels:
+      failure-domain.beta.kubernetes.io/zone: us-east1-b
+  spec:
+    storageClassName: geth-rinkeby
+    resources:
+      requests:
+        storage: 700Gi
+    accessModes:
+      - ReadWriteOnce
+  status: {}
+kind: List
+metadata: {}

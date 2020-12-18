@@ -1,0 +1,144 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      app: geth-ropsten
+    name: geth-ropsten
+  spec:
+    ports:
+    - name: "8545"
+      port: 8545
+      targetPort: 8545
+    - name: "8546"
+      port: 8546
+      targetPort: 8546
+    - name: "30303"
+      port: 30303
+      targetPort: 30303
+    type: ClusterIP
+    selector:
+      app: geth-ropsten
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      app: geth-ropsten
+    name: geth-ropsten-external
+  spec:
+    ports:
+    - name: "rcp"
+      port:  8545
+      targetPort: 8545
+    - name: "ws"
+      port: 8546
+      targetPort: 8546
+    type: ExternalName
+    externalName: geth-ropsten.blockchain.svc.cluster.local
+    selector:
+      app: geth-ropsten
+  status:
+    loadBalancer: {}
+- apiVersion: apps/v1 
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      app: geth-ropsten
+      env: blockchain
+      blockchain: ropsten
+    name: geth-ropsten
+  spec:
+    replicas: 1
+    strategy:
+      type: Recreate
+    selector:
+      matchLabels:
+        app: geth-ropsten
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: geth-ropsten
+      spec:
+        containers:
+        - args: ["--ropsten" ,"--rpc", "--rpcapi", "eth,net,web3", "--rpcaddr", "0.0.0.0", "--rpcport", "8545", "--rpcvhosts", "*", "--syncmode", "full", "--datadir", ".ropsten", "--verbosity", "3"]
+          image: ethereum/client-go:v1.9.21
+          name: geth-ropsten
+          resources:
+            limits:
+              cpu: "1000m"
+              memory: "4Gi"
+            requests:
+              cpu: "500m"
+              memory: "2Gi"
+          volumeMounts:
+          - mountPath: /.ropsten
+            name: geth-ropsten
+          ports:
+          - name: rpc
+            containerPort: 8545
+          - name: ws
+            containerPort: 8546
+          - name: p2p
+            containerPort: 30303
+        restartPolicy: Always
+        nodeSelector:
+          cloud.google.com/gke-nodepool: blockchain-nodes
+        volumes:
+        - name: geth-ropsten
+          persistentVolumeClaim:
+            claimName: geth-ropsten
+  status: {}
+- apiVersion: storage.k8s.io/v1
+  kind: StorageClass
+  metadata:
+    name: geth-ropsten
+  provisioner: pd.csi.storage.gke.io 
+  allowVolumeExpansion: true
+  parameters:
+    type: pd-balanced
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    name: geth-ropsten
+  spec:
+    storageClassName: "geth-goerli"
+    capacity:
+      storage: 400G
+    accessModes:
+      - ReadWriteOnce
+    claimRef:
+      namespace: blockchain
+      name: geth-ropsten
+    gcePersistentDisk:
+      pdName: geth-ropsten-data
+      fsType: ext4
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: geth-ropsten
+  spec:
+    storageClassName: geth-ropsten
+    resources:
+      requests:
+        storage: 400G
+    accessModes:
+      - ReadWriteOnce
+  status: {}
+kind: List
+metadata: {}

@@ -1,0 +1,151 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      app: poa-kovan
+    name: poa-kovan 
+  spec:
+    ports:
+    - name: "rpc"
+      port:  8545
+      targetPort: 8545
+    - name: "ws"
+      port: 8546
+      targetPort: 8546
+    - name: "p2p"
+      port: 30303 
+      targetPort: 30303
+    type: ClusterIP
+    selector:
+      app: poa-kovan 
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      app: poa-kovan
+    name: poa-kovan-external 
+  spec:
+    ports:
+    - name: "rpc"
+      port:  8545
+      targetPort: 8545
+    - name: "ws"
+      port: 8546
+      targetPort: 8546
+    - name: "p2p"
+      port: 30303 
+      targetPort: 30303
+    type: ExternalName
+    externalName: poa-kovan.blockchain.svc.cluster.local
+    selector:
+      app: poa-kovan 
+  status:
+    loadBalancer: {}
+- apiVersion: apps/v1 
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f ../../docker-compose/poa/docker-compose.yml
+        -o poa.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      app: poa-kovan
+    name: poa-kovan
+  spec:
+    replicas: 1
+    strategy:
+      type: Recreate
+    selector:
+      matchLabels:
+        app: poa-kovan
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: poa-kovan
+      spec:
+        securityContext:
+          fsGroup: 1000
+        containers:
+        - args: ["--base-path", ".ethereum", "--chain", "kovan", "--port", "30303", "--jsonrpc-hosts", "all", "--jsonrpc-cors", "all", "--jsonrpc-interface", "all", "--ipc-apis", "web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub", "--ws-interface", "all", "--ws-hosts", "all", "--ws-origins", "all", "--ws-apis", "web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub", "--interface", "all"]
+          command: ["/bin/parity"]
+          image: poktnetwork/poa-node:kovan
+          imagePullPolicy: Always
+          name: poa-core
+          resources:
+            limits:
+              cpu: "1000m"
+              memory: "4Gi"
+            requests:
+              cpu: "500m"
+              memory: "2Gi"
+          volumeMounts:
+          - mountPath: /home/parity/.ethereum 
+            name: poa-kovan
+          ports:
+          - name: rpc
+            containerPort: 8545
+          - name: ws 
+            containerPort: 8546
+          - name: p2p
+            containerPort: 30303  
+        restartPolicy: Always
+        nodeSelector:
+          cloud.google.com/gke-nodepool: blockchain-nodes
+        volumes:
+        - name: poa-kovan
+          persistentVolumeClaim:
+            claimName: poa-kovan
+  status: {}
+- apiVersion: storage.k8s.io/v1
+  kind: StorageClass
+  metadata:
+    name: poa-kovan
+  provisioner: kubernetes.io/gce-pd
+  allowVolumeExpansion: true
+  parameters:
+    type: pd-ssd
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    name: poa-kovan
+  spec:
+    storageClassName: "poa-kovan"
+    capacity:
+      storage: 100G
+    accessModes:
+      - ReadWriteOnce
+    claimRef:
+      namespace: blockchain
+      name: poa-kovan
+    gcePersistentDisk:
+      pdName: poa-kovan-blockchain
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: poa-kovan
+    labels:
+      failure-domain.beta.kubernetes.io/zone: us-east1-b
+  spec:
+    storageClassName: poa-kovan
+    resources:
+      requests:
+        storage: 100G
+    accessModes:
+      - ReadWriteOnce
+
+kind: List
+metadata: {}

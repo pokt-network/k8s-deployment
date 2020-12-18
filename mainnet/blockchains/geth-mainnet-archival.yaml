@@ -1,0 +1,139 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: geth-mainnet 
+    name: geth-mainnet 
+  spec:
+    ports:
+    - name: "8545"
+      port: 8545 
+      targetPort: 8545 
+    type: ClusterIP 
+    selector:
+      app: geth-mainnet 
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: geth-mainnet 
+    name: geth-mainnet-external 
+  spec:
+    ports:
+    - name: "rcp"
+      port:  8545 
+      targetPort: 8545 
+    - name: "ws"
+      port: 8546
+      targetPort: 8546
+    type: ExternalName
+    externalName: geth-mainnet.blockchain.svc.cluster.local
+    selector:
+      app: geth-mainnet 
+  status:
+    loadBalancer: {}
+- apiVersion: apps/v1 
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      app: geth
+      env: prod 
+      blockchain: mainnet
+      app: geth-mainnet
+    name: geth-mainnet
+  spec:
+    replicas: 1
+    selector: 
+      matchLabels:
+        app: geth-mainnet
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+            app: geth-mainnet
+      spec:
+        containers:
+        - args: ["--rpc", "--rpcapi", "eth,net,web3", "--rpcaddr", "0.0.0.0", "--rpcport", "8545", "--rpcvhosts=*", "--syncmode", "fast", "--gcmode", "archive", "--datadir", ".mainnet", "--verbosity", "3", "--cache=12192"]
+          image: ethereum/client-go:v1.9.21
+          name: geth-mainnet
+          resources:
+            limits:
+              cpu: "8000m"
+              memory: "16Gi"
+            requests:
+              cpu: "4000m"
+              memory: "8Gi"
+          volumeMounts:
+          - mountPath: /.mainnet
+            name: geth-mainnet
+          ports:
+          - name: rpc
+            containerPort: 8545
+          - name: ws
+            containerPort: 8546
+          - name: p2p
+            containerPort: 30303
+        restartPolicy: Always
+        nodeSelector:
+          cloud.google.com/gke-nodepool: blockchain-nodes
+        volumes:
+        - name: geth-mainnet
+          persistentVolumeClaim:
+            claimName: geth-mainnet
+  status: {}
+- apiVersion: storage.k8s.io/v1
+  kind: StorageClass
+  metadata:
+    name: geth-mainnet-balanced 
+  provisioner: kubernetes.io/gce-pd 
+  allowVolumeExpansion: true
+  parameters:
+    type: pd-ssd
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    name: geth-mainnet
+  spec:
+    storageClassName: "geth-mainnet-balanced"
+    capacity:
+      storage: 7348Gi
+    accessModes:
+      - ReadWriteOnce
+    claimRef:
+      namespace: blockchain 
+      name: geth-mainnet 
+    gcePersistentDisk:
+      pdName: geth-mainnet-archival
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: geth-mainnet
+    labels:
+      failure-domain.beta.kubernetes.io/zone: us-east1-b
+  spec:
+    storageClassName: geth-mainnet-balanced
+    resources:
+      requests:
+        storage: 7348Gi
+    accessModes:
+      - ReadWriteOnce
+kind: List
+metadata: {}
