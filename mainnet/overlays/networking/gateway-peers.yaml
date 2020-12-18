@@ -1,35 +1,35 @@
 apiVersion: gateway.solo.io/v1
 kind: Gateway
 metadata:
-  name: mainnet-seed-peers4
+  name: mainnet-node-peers1
   namespace: gw-mainnet 
 spec:
   bindAddress: '::'
   bindPort: 23856 
   tcpGateway:
     tcpHosts:
-    - name: mainnet-seed-peers4
+    - name: mainnet-node-peers1
       destination:
         single:
           upstream:
-            name: mainnet-pocket-core-seed4-26656 
+            name: mainnet-pocket-core-1-26656 
             namespace: gw-mainnet
   useProxyProto: false
 ---
 apiVersion: gateway.solo.io/v1
 kind: Gateway
 metadata:
-  name: mainnet-seed-peers5
+  name: mainnet-node-peers2
   namespace: gw-mainnet 
 spec:
   bindAddress: '::'
   bindPort: 24856 
   tcpGateway:
     tcpHosts:
-    - name: mainnet-seed-peers5
+    - name: mainnet-node-peers2
       destination:
         single:
           upstream:
-            name: mainnet-pocket-core-seed5-26656 
+            name: mainnet-pocket-core-2-26656 
             namespace: gw-mainnet
   useProxyProto: false

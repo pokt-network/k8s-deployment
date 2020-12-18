@@ -10,14 +10,13 @@ spec:
       volumes:
         - name: pocket-core-data
           persistentVolumeClaim:
-            claimName: pocket-core-data-4
+            claimName: pocket-core-data-2
         - name: pocket-core-config
           configMap:
-            name: pocket-core-config-4
-
+            name: pocket-core-config-2
         - name: pocket-core-node-key
           secret:
-            secretName: pocket-core-node-key4
+            secretName: pocket-core-node-key2
         - name: pocket-core-priv-val-key
           secret:
-            secretName: pocket-core-priv-val-key4
+            secretName: pocket-core-priv-val-key2

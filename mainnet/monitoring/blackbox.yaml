@@ -8,37 +8,37 @@ metadata:
 data:
   blackbox.yaml: |
     modules:
-      node4_jailed:
+      node1_jailed:
         http:
           method: POST
-          body: '{"address": "d46556719200aee73fc7446731ae58496978548d"}'
+          body: '{"address": "9d56483a2f7aae17b41aab14f8d5e11563bc601f"}'
           fail_if_body_matches_regexp:
           - "jailed\":true"     
           valid_status_codes: []
         prober: http
         timeout: 5s
-      node5_jailed:
+      node2_jailed:
         http:
           method: POST
-          body: '{"address": "5bcae50364952a5fa3a8363f93f2adffc9eff42e"}'
+          body: '{"address": "e557240c846913573b674944be33602a5892bb00"}'
           fail_if_body_matches_regexp:
           - "jailed\":true"     
           valid_status_codes: []
         prober: http
         timeout: 5s
-      node4_unstaked:
+      node1_unstaked:
         http:
           method: POST
-          body: '{"address": "d46556719200aee73fc7446731ae58496978548d"}'
+          body: '{"address": "9d56483a2f7aae17b41aab14f8d5e11563bc601f"}'
           fail_if_body_matches_regexp:
           - "tokens\":\ \"0\""     
           valid_status_codes: []
         prober: http
         timeout: 5s
-      node5_unstaked:
+      node2_unstaked:
         http:
           method: POST
-          body: '{"address": "5bcae50364952a5fa3a8363f93f2adffc9eff42e"}'
+          body: '{"address": "e557240c846913573b674944be33602a5892bb00"}'
           fail_if_body_matches_regexp:
           - "tokens\":\ \"0\""     
           valid_status_codes: []

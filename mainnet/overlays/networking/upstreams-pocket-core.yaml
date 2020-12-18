@@ -3,11 +3,11 @@ kind: Upstream
 metadata:
   annotations:
   labels:
-    app: pocket-core-4
+    app: pocket-core-1
     discovered_by: kubernetesplugin
     discovery.solo.io/function_discovery: enabled
     env: mainnet
-  name: mainnet-pocket-core-4-80
+  name: mainnet-pocket-core-1-80
   namespace: gw-mainnet
 spec:
   discoveryMetadata: {}
@@ -19,9 +19,9 @@ spec:
     maxRetries: 3
   kube:
     selector:
-      app: pocket-core-4
+      app: pocket-core-1
       env: mainnet
-    serviceName: pocket-core-4
+    serviceName: pocket-core-1
     serviceNamespace: mainnet
     servicePort: 80
 status:
@@ -33,11 +33,11 @@ kind: Upstream
 metadata:
   annotations:
   labels:
-    app: pocket-core-5
+    app: pocket-core-2
     discovered_by: kubernetesplugin
     discovery.solo.io/function_discovery: enabled
     env: mainnet
-  name: mainnet-pocket-core-5-80
+  name: mainnet-pocket-core-2-80
   namespace: gw-mainnet
 spec:
   discoveryMetadata: {}
@@ -49,9 +49,9 @@ spec:
     maxRetries: 3
   kube:
     selector:
-      app: pocket-core-5
+      app: pocket-core-2
       env: mainnet
-    serviceName: pocket-core-5
+    serviceName: pocket-core-2
     serviceNamespace: mainnet
     servicePort: 80
 status:

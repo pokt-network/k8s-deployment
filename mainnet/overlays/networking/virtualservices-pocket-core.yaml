@@ -1,7 +1,7 @@
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: pocket-core-mainnet4-https
+  name: pocket-core-mainnet1-https
   namespace: gw-mainnet 
 spec:
   virtualHost:
@@ -35,21 +35,21 @@ spec:
         - '*'
         maxAge: 1d
     domains:
-      - 'node4.mainnet.pokt.network'
+      - 'node1.mainnet.pokt.network'
     routes:
     - matchers:
        - exact: /v1
       route_action:
         single:
           upstream:
-            name: mainnet-pocket-core-4-80
+            name: mainnet-pocket-core-1-80
             namespace: gw-mainnet
     - matchers:
        - prefix: /v1/client/relay
       route_action:
         single:
           upstream:
-            name: mainnet-pocket-core-4-80
+            name: mainnet-pocket-core-1-80
             namespace: gw-mainnet
       options:
         timeout: '300s'
@@ -58,14 +58,14 @@ spec:
       route_action:
         single:
           upstream:
-            name: mainnet-pocket-core-4-80
+            name: mainnet-pocket-core-1-80
             namespace: gw-mainnet
     - matchers:
        - prefix: /v1/client/dispatch
       route_action:
         single:
           upstream:
-            name: mainnet-pocket-core-4-80
+            name: mainnet-pocket-core-1-80
             namespace: gw-mainnet
   ssl_config:
     secret_ref:
@@ -75,7 +75,7 @@ spec:
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
-  name: pocket-core-mainnet5-https
+  name: pocket-core-mainnet2-https
   namespace: gw-mainnet 
 spec:
   virtualHost:
@@ -109,21 +109,21 @@ spec:
         - '*'
         maxAge: 1d
     domains:
-      - 'node5.mainnet.pokt.network'
+      - 'node2.mainnet.pokt.network'
     routes:
     - matchers:
        - exact: /v1
       route_action:
         single:
           upstream:
-            name: mainnet-pocket-core-5-80
+            name: mainnet-pocket-core-2-80
             namespace: gw-mainnet
     - matchers:
        - prefix: /v1/client/relay
       route_action:
         single:
           upstream:
-            name: mainnet-pocket-core-5-80
+            name: mainnet-pocket-core-2-80
             namespace: gw-mainnet
       options:
         timeout: '300s'
@@ -132,14 +132,14 @@ spec:
       route_action:
         single:
           upstream:
-            name: mainnet-pocket-core-5-80
+            name: mainnet-pocket-core-2-80
             namespace: gw-mainnet
     - matchers:
        - prefix: /v1/client/dispatch
       route_action:
         single:
           upstream:
-            name: mainnet-pocket-core-5-80
+            name: mainnet-pocket-core-2-80
             namespace: gw-mainnet
   ssl_config:
     secret_ref:

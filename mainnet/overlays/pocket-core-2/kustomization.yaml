@@ -1,13 +1,13 @@
 # kind: PrefixSuffixTransformer
-nameSuffix: "-4"
+nameSuffix: "-2"
 commonLabels:
-  app: pocket-core-4
+  app: pocket-core-2
 bases:
   - ../../base/
 
 
 configMapGenerator:
-- name: pocket-core-config-4
+- name: pocket-core-config-2
   files:
   - ../chains.json
   - ./config.json

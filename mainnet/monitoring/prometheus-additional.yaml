@@ -3,10 +3,10 @@
   metrics_path: /probe
   static_configs:
     - targets:
-        - node4_jailed,http://pocket-core-5.mainnet:8081/v1/query/node
-        - node4_jailed,http://pocket-core-4.mainnet:8081/v1/query/node
-        - node5_jailed,http://pocket-core-5.mainnet:8081/v1/query/node
-        - node5_jailed,http://pocket-core-4.mainnet:8081/v1/query/node
+        - node1_jailed,http://pocket-core-5.mainnet:8081/v1/query/node
+        - node1_jailed,http://pocket-core-4.mainnet:8081/v1/query/node
+        - node2_jailed,http://pocket-core-5.mainnet:8081/v1/query/node
+        - node2_jailed,http://pocket-core-4.mainnet:8081/v1/query/node
   relabel_configs:
     - source_labels: [__address__]
       target_label: __param_target
@@ -29,10 +29,10 @@
   metrics_path: /probe
   static_configs:
     - targets:
-        - node4_unstaked,http://pocket-core-4.mainnet:8081/v1/query/node
-        - node4_unstaked,http://pocket-core-5.mainnet:8081/v1/query/node
-        - node5_unstaked,http://pocket-core-5.mainnet:8081/v1/query/node
-        - node5_unstaked,http://pocket-core-4.mainnet:8081/v1/query/node
+        - node1_unstaked,http://pocket-core-4.mainnet:8081/v1/query/node
+        - node1_unstaked,http://pocket-core-5.mainnet:8081/v1/query/node
+        - node2_unstaked,http://pocket-core-5.mainnet:8081/v1/query/node
+        - node2_unstaked,http://pocket-core-4.mainnet:8081/v1/query/node
   relabel_configs:
     - source_labels: [__address__]
       target_label: __param_target
@@ -55,8 +55,8 @@
   metrics_path: /probe
   static_configs:
     - targets:
-        - http_2xx,http://pocket-core-4.mainnet:8081/v1
-        - http_2xx,http://pocket-core-5.mainnet:8081/v1
+        - http_2xx,http://pocket-core-1.mainnet:8081/v1
+        - http_2xx,http://pocket-core-2.mainnet:8081/v1
   relabel_configs:
     - source_labels: [__address__]
       target_label: __param_target
@@ -79,8 +79,8 @@
   metrics_path: /probe
   static_configs:
     - targets:
-        - http_2xx,https://node4.mainnet.pokt.network/v1
-        - http_2xx,https://node5.mainnet.pokt.network/v1
+        - http_2xx,https://node1.mainnet.pokt.network/v1
+        - http_2xx,https://node2.mainnet.pokt.network/v1
   relabel_configs:
     - source_labels: [__address__]
       target_label: __param_target

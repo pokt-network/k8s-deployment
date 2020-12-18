@@ -2,7 +2,7 @@
     "tendermint_config": {
         "RootDir": "/home/app/.pocket",
         "ProxyApp": "tcp://127.0.0.1:26658",
-        "Moniker": "pocket-core-5",
+        "Moniker": "pocket-core-2",
         "FastSyncMode": true,
         "DBBackend": "cleveldb",
         "DBPath": "data",
@@ -47,7 +47,7 @@
         "P2P": {
             "RootDir": "/home/app/.pocket",
             "ListenAddress": "tcp://0.0.0.0:26656",
-            "ExternalAddress": "tcp://node5.mainnet.pokt.network:26656",
+            "ExternalAddress": "tcp://node2.mainnet.pokt.network:26656",
             "Seeds": "03b74fa3c68356bb40d58ecc10129479b159a145@seed1.mainnet.pokt.network:20656,64c91701ea98440bc3674fdb9a99311461cdfd6f@seed2.mainnet.pokt.network:21656",
             "PersistentPeers": "e09ce22e0abfd8129776128c0c9b3836024d8c6e@node1.mainnet.pokt.network:22656,8dd722c42425783b50db707995f841b3c7ccc827@node2.mainnet.pokt.network:23656,8afc6b4195e3fd59fa3aa8bab65b2b7c497cedf9@node3.mainnet.pokt.network:24656,d46556719200aee73fc7446731ae58496978548d@node4.mainnet.pokt.network:25656,a8943929b30cbc3e7a30c2de06b385bcf874134b@node6.mainnet.pokt.network:27656,c6dfe12a4ff2bc2b44c83c791853b6edb6c5eb58@node7.mainnet.pokt.network:28656,913fed2298bc8af74989bc56d94e2e4ca95a6519@node8.mainnet.pokt.network:29656,40c8973967b8d6b1123029819cad20fd44580e9e@node9.mainnet.pokt.network:20756,e74727d0ba34d9f7f6f583cb4a87dbe91d692c5f@node10.mainnet.pokt.network:21756,,bf214ae424a4bd698972e4f4fda97939e9909bdd@node11.mainnet.pokt.network:22756, 46ed186385df21121ea279aef2094d2fea79235b@node12.mainnet.pokt.network:23756, 0a9001ee20f796a6f794f882287c032ea8549c3b@node13.mainnet.pokt.network:24756, 32aa0d57bf341b517a5947731b99f4d9387d7d3e@node14.mainnet.pokt.network:25756, a1726dd9509e741169b912675cbfa8de2fe8113c@node15.mainnet.pokt.network:26756, c2c6fb35d9f3f2ea0bc6faa641acf8d348d0fb9e@node16.mainnet.pokt.network:27756, 4dbf149b73dbb3451e4c5b1dab6d1da9bb4086fc@node17.mainnet.pokt.network:21756, 9b95a90092c787f88f06311a3073a9212a610fb6@node18.mainnet.pokt.network:29756, 79d807fdf03c2776082da65f275a610ad1ba2862@node19.mainnet.pokt.network:20856, e2df8f63be18d37cf8258a2bb6800811196a1931@node20.mainnet.pokt.network:21856",
             "UPNP": true,

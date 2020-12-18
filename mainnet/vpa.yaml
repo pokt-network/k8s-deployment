@@ -5,7 +5,7 @@ apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
 metadata:
   namespace: mainnet
-  name: pocket-core-4 
+  name: pocket-core-1
 spec:
   resourcePolicy:
     containerPolicies:
@@ -20,7 +20,7 @@ spec:
   targetRef:
     apiVersion: "apps/v1"
     kind:       Deployment
-    name:       pocket-core-4
+    name:       pocket-core-1
   updatePolicy:
     updateMode: "Auto"
 ---
@@ -28,7 +28,7 @@ apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
 metadata:
   namespace: mainnet
-  name: pocket-core-5 
+  name: pocket-core-2 
 spec:
   resourcePolicy:
     containerPolicies:
@@ -43,6 +43,6 @@ spec:
   targetRef:
     apiVersion: "apps/v1"
     kind:       Deployment
-    name:       pocket-core-5 
+    name:       pocket-core-2 
   updatePolicy:
     updateMode: "Auto"

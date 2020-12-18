@@ -77,9 +77,9 @@ spec:
       grpcWeb:
         disable: true
     virtualServices:
-      - name: pocket-core-mainnet4-https
+      - name: pocket-core-mainnet1-https
         namespace: gw-mainnet 
-      - name: pocket-core-mainnet5-https
+      - name: pocket-core-mainnet2-https
         namespace: gw-mainnet 
   proxyNames: 
     - gateway-proxy

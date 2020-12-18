@@ -1,5 +1,5 @@
 creation_rules:
-  - path_regex: .*/mainnet/overlays/pocket-core-4
-    gcp_kms: projects/pocket-core-mainnet/locations/global/keyRings/mainnet/cryptoKeys/node4
-  - path_regex: .*/mainnet/overlays/pocket-core-5
-    gcp_kms: projects/pocket-core-mainnet/locations/global/keyRings/mainnet/cryptoKeys/node5
+  - path_regex: .*/mainnet/overlays/pocket-core-1
+    gcp_kms: projects/pocket-core-mainnet/locations/global/keyRings/mainnet/cryptoKeys/node1
+  - path_regex: .*/mainnet/overlays/pocket-core-2
+    gcp_kms: projects/pocket-core-mainnet/locations/global/keyRings/mainnet/cryptoKeys/node2

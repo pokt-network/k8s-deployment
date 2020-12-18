@@ -1,6 +1,6 @@
 namespace:  mainnet
 resources:
-  - ./pocket-core-4
-  - ./pocket-core-5
+  - ./pocket-core-1
+  - ./pocket-core-2
 commonLabels:
   env: "mainnet"

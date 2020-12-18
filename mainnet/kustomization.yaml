@@ -5,3 +5,4 @@ resources:
   - ./overlays/networking
   - ./storage-class.yaml
   - ./vpa.yaml
+  - cluster-certificate-issuer.yaml

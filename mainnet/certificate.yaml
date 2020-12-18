@@ -10,6 +10,6 @@ spec:
     name: letsencrypt-prod
     kind: ClusterIssuer
   dnsNames:
-  - node4.mainnet.pokt.network
-  - node5.mainnet.pokt.network
+  - node1.mainnet.pokt.network
+  - node2.mainnet.pokt.network
   - grafana-mon.mainnet.pokt.network
