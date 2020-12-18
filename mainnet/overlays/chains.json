@@ -1,43 +1,7 @@
 [
     {
-        "id": "0001",
-        "url": "http://pocket-core.blockchain.svc.cluster.local:8081"
-    },
-    {
-        "id": "0009",
-        "url": "http://matic-testnet.blockchain.svc.cluster.local:8545"
-    },
-    {
-        "id": "0010",
-        "url": "http://172.16.253.6:8545"
-    },
-    {
         "id": "0021",
-        "url": "http://geth-mainnet.blockchain.svc.cluster.local:8545"
-    },
-    {
-        "id": "0022",
-        "url": "http://geth-mainnet.blockchain.svc.cluster.local:8545"
-    },
-    {
-        "id": "0023",
-        "url": "http://geth-ropsten.blockchain.svc.cluster.local:8545"
-    },
-    {
-        "id": "0024",
-        "url": "http://poa-kovan.blockchain.svc.cluster.local:8545"
-    },
-    {
-        "id": "0025",
-        "url": "http://geth-rinkeby.blockchain.svc.cluster.local:8545"
-    },
-    {
-        "id": "0026",
-        "url": "http://geth-goerli.blockchain.svc.cluster.local:8545"
-    },
-    {
-        "id": "0027",
-        "url": "http://poa-xdai.blockchain.svc.cluster.local:8545"
+        "url": "http://your.eth.cluster:8545"
     }
 
 ]
