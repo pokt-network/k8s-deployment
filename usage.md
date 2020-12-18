@@ -1,3 +1,8 @@
+### Infrastructure architecture
+
+
+![Infrastructure diagram](./assets/pokt-network-infrastructure-overview.png)
+
 
 ### Directory structure
 ```
@@ -13,7 +18,59 @@ mainnet
     └── pocket-core-2
 ```
 
-## Flux
+## Monitoring
+
+### Prometheus operator
+
+Prometheus operator is a helm chart stack that includes grafana/prometheus and other components in order to monitor your entire cluster
+
+To learn more about grafana and prometheus installation visit: https://github.com/helm/charts/tree/master/stable/prometheus-operator 
+
+Here you can find the steps and configuration steps to install prometheus
+[Prometheus operator installation instructions](mainnet/monitoring/helm/README.md#prometheus-operator)
+
+
+### Loki
+
+Loki is a software that alongside with prometheus and grafana show the logs across all the pods running in k8s
+
+Similar to prometheus operator is installed via helm charts 
+
+To learn more about loki please visit: https://grafana.com/docs/loki/latest/installation/helm/
+
+Here you can find the steps and configuration to install loki:
+
+[Loki installation instructions](mainnet/monitoring/helm/README.md#Loki)
+
+
+## Monitoring
+
+### Gloo 
+
+Gloo is a k8s native ingres controller and api gateway. We use Gloo to expose the validators port to be used to the public 
+
+To learn more about gloo please visit: https://docs.solo.io/gloo-edge/latest/getting_started/
+
+For installing gloo you can see [This readme](mainnet/networking/README#Gloo)
+
+> kubectl create ns gw-mainnet
+
+> helm install gloo-devnet gloo/gloo --namespace gw-mainnet --values mainnet/helm/mainnet.yaml
+ 
+
+### Cert-manager 
+
+We use cert-manager as certificates manager for installing/maintaining our ssl certs
+
+To learn more about cert-manager please visit: https://cert-manager.io/docs/installation/kubernetes/
+
+For installing cert-manager you can see [This readme](mainnet/networking/README#cert-manager)
+
+
+## CI/CD and kustomize 
+
+
+### Flux
 Docs: https://docs.fluxcd.io/en/1.21.0/tutorials/get-started/<br>
 
 Flux is a gitops operator. What it does is sync your cluster and your infrastructure repository, so your repository becomes the only source of truth for your kubernetes cluster.
@@ -22,16 +79,6 @@ Flux job is to make sure whatever it is in your repository is deployed to your c
 
 Make sure to add the right repository and the right path to where your deployment manifest are. <br>
 
-
-
-### SOPS
-Docs: https://github.com/mozilla/sops <br>
-
-Sops is what we use to securely store our private keys in our repository. You can use SOPS with AWS, GCP or Azure KMS. You can also use your own GPG keys.
-
-The file `.sops.yaml` in the root of the repository provides an easy way to especify which key to use on which repository. Using this files helps not having to type the key for each file you need to encrypt/decrypt.
-
-In order to get SOPS to work, you need to either set the `--sops` flag when installing flux or you can edit the flux deployment and add it to the configuration.
 
 ### Kustomize
 Docs: https://github.com/kubernetes-sigs/kustomize<br>
@@ -51,7 +98,20 @@ Files ending in .enc.yaml are your encrypted kubernetes secret containing the pr
 patch.yaml contains the customization for the files in the base directory. Here you can add labels, annotations, configMaps, etc. This change will only afect that directory.
 
 
-## Encrypting your keys
+## Secret management
+
+
+### SOPS
+Docs: https://github.com/mozilla/sops <br>
+
+Sops is what we use to securely store our private keys in our repository. You can use SOPS with AWS, GCP or Azure KMS. You can also use your own GPG keys.
+
+The file `.sops.yaml` in the root of the repository provides an easy way to especify which key to use on which repository. Using this files helps not having to type the key for each file you need to encrypt/decrypt.
+
+In order to get SOPS to work, you need to either set the `--sops` flag when installing flux or you can edit the flux deployment and add it to the configuration.
+
+
+### Encrypting your keys
 
 1. Get priv_val_key.json and node_key.json
 ```
@@ -69,7 +129,6 @@ sops -e node-key-secret.yaml --output node-key-secret.enc.yaml
 ```
 
 If flux was configured correctly, these changes should be applied automatically to your cluster.
-
 
 ## NOTE:
 
