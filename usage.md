@@ -1,3 +1,8 @@
+### Infrastructure architecture
+
+
+![Infrastructure diagram](./assets/pokt-network-infrastructure-overview.png)
+
 
 ### Directory structure
 ```

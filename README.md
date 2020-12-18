@@ -4,7 +4,6 @@
 This repository is synchronized with the `pocket-infra` GKE cluster. We use the GitOps operator Flux and kustomize for YAML customization.
 
 
-
 ## Usage
 
 For installing all the components described below, please give a check to the file [usage.md](usage.md)
@@ -97,4 +96,10 @@ Keep in mind that all changes made to this repo will affect the `pocket-infra` G
     │       └── priv_val_key.json
     ├── storage-class.yaml
     └── vpa.yaml
+```
+
+### Infrastructure architecture
+
+
+![Infrastructure diagram](./assets/pokt-network-infrastructure-overview.png)
 
