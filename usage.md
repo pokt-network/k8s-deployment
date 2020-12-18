@@ -121,14 +121,19 @@ pocket accounts set-validator <address>
 ```
 kubectl create secret generic pocket-core-node-key1 --from-file ~/.pocket/node_key.json --dry-run -o yaml > node-key-secret.yaml
 ``` 
-*make sure you do this for both priv_val_key.json and node_key.json
+```
+kubectl create secret generic pocket-core-priv-val-key1 --from-file ~/.pocket/priv_val_key.json --dry-run -o yaml > priv-val-key-secret.yaml
+``` 
 
 3. Encrypt kubernetes secrets using sops
 ```
 sops -e node-key-secret.yaml --output node-key-secret.enc.yaml
 ```
-
-If flux was configured correctly, these changes should be applied automatically to your cluster.
+```
+sops -e priv-val-key-secret.yaml --output priv-val-key-secret.enc.yaml
+```
+4. Place the .enc.yaml files in their corresponding directory (`mainnet/overlays/pocket-core-*`) <br><br>
+If flux was configured correctly, these changes should be applied automatically to your cluster after they are pushed to the repository.
 
 ## NOTE:
 
