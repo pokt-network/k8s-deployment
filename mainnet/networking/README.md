@@ -29,7 +29,7 @@ For installing cert-manager, proceed with:
 
 In case you need dns verification functionality see:
 
-helm upgrade --install    --wait  --version v1.1.0 --set extraArgs={--dns01-recursive-nameservers-only=true} --set installCRDs=true   --namespace cert-manager   "cert-manager"   jetstack/cert-manager
+> helm upgrade --install    --wait  --version v1.1.0 --set extraArgs={--dns01-recursive-nameservers-only=true} --set installCRDs=true   --namespace cert-manager   "cert-manager"   jetstack/cert-manager
 
 
 Please verify that you have cert-manager installed correctly by doing:
@@ -39,6 +39,6 @@ Please verify that you have cert-manager installed correctly by doing:
 
 ### Customize your certificates for your domains
 
-After the cert-manager installation is done, you need to edit the file [certificate.yaml](../certificate.yaml) which has the ssl certificates and issuer
+After the cert-manager installation is done, you need to edit/install the file [certificate.yaml](../certificate.yaml) which has the ssl certificates and issuer
 
 For more info, please refer to their official docs 
