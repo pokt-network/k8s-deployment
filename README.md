@@ -3,13 +3,50 @@
 
 This repository is synchronized with the `pocket-infra` GKE cluster. We use the GitOps operator Flux and kustomize for YAML customization.
 
+
 ### Kustomize
+
 To learn more about kustomize visit: https://github.com/kubernetes-sigs/kustomize/tree/master/docs
 
+
+### Prometheus operator 
+
+To learn more about grafana and prometheus installation visit: https://github.com/helm/charts/tree/master/stable/prometheus-operator 
+
+Here you can find the steps and configuration steps to install prometheus
+[Prometheus operator installation instructions](mainnet/monitoring/helm/README.md#prometheus-operator)
+
+
+### Loki 
+
+To learn more about loki please visit: https://grafana.com/docs/loki/latest/installation/helm/
+
+Here you can find the steps and configuration to install loki:
+
+[Loki installation instructions](mainnet/monitoring/helm/README.md#Loki)
+
+
+### Gloo 
+
+To learn more about gloo please visit: https://docs.solo.io/gloo-edge/latest/getting_started/
+
+For installing gloo proceed with:
+
+
+> kubectl create ns gw-mainnet
+
+
+> helm install gloo-devnet gloo/gloo --namespace gw-mainnet --values mainnet/helm/mainnet.yaml
+ 
+
+
 ### Flux
+
 To learn more about flux visit: https://docs.fluxcd.io/en/1.19.0/
 
+
 ### Note
+
 Keep in mind that all changes made to this repo will affect the `pocket-infra` GKE cluster.
 
 ### Directory Structure

@@ -1,4 +1,4 @@
-# LOKI-controller
+# LOKI
 
 
 Here you will find steps for installing/updating/customizing loki using helm
@@ -23,9 +23,7 @@ Please check the following docs to edit `loki_values_mainnet.yaml`
 - https://grafana.github.io/loki/charts/
 - https://povilasv.me/helm-kustomze-better-together/
 
-
-
-# Prometheus-controller
+# prometheus-operator
 
 
 Here you will find steps for installing/updating/customizing prometheus-controller using helm
