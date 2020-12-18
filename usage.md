@@ -13,6 +13,42 @@ mainnet
     └── pocket-core-2
 ```
 
+## Prometheus operator
+
+Prometheus operator is a helm chart stack that includes grafana/prometheus and other components in order to monitor your entire cluster
+
+To learn more about grafana and prometheus installation visit: https://github.com/helm/charts/tree/master/stable/prometheus-operator 
+
+Here you can find the steps and configuration steps to install prometheus
+[Prometheus operator installation instructions](mainnet/monitoring/helm/README.md#prometheus-operator)
+
+
+## Loki
+
+Loki is a software that alongside with prometheus and grafana show the logs across all the pods running in k8s
+
+Similar to prometheus operator is installed via helm charts 
+
+To learn more about loki please visit: https://grafana.com/docs/loki/latest/installation/helm/
+
+Here you can find the steps and configuration to install loki:
+
+[Loki installation instructions](mainnet/monitoring/helm/README.md#Loki)
+
+
+### Gloo 
+
+Gloo is a k8s native ingres controller and api gateway. We use Gloo to expose the validators port to be used to the public 
+
+To learn more about gloo please visit: https://docs.solo.io/gloo-edge/latest/getting_started/
+
+For installing gloo proceed with:
+
+> kubectl create ns gw-mainnet
+
+> helm install gloo-devnet gloo/gloo --namespace gw-mainnet --values mainnet/helm/mainnet.yaml
+ 
+
 ## Flux
 Docs: https://docs.fluxcd.io/en/1.21.0/tutorials/get-started/<br>
 
