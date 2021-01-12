@@ -18,6 +18,27 @@ mainnet
     └── pocket-core-2
 ```
 
+
+## Pre-installation requirements
+
+
+We assume that you are using GKE and you have created the following resources
+
+Nodepools:
+
+- pocket-core
+- system
+- blockchain 
+
+Namespaces:
+
+- mainnet
+- gw-mainnet
+- monitoring
+- cert-manager
+- blockchain
+
+
 ## Monitoring
 
 ### Prometheus operator

@@ -26,7 +26,7 @@ To learn more about flux visit: https://docs.fluxcd.io/en/1.19.0/
 
 ### Prometheus operator 
 
-To learn more about grafana and prometheus installation visit: https://github.com/helm/charts/tree/master/stable/prometheus-operator 
+To learn more about grafana and prometheus installation visit: https://github.com/prometheus-community/helm-charts 
 
 
 ### Loki 

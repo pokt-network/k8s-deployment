@@ -33,14 +33,28 @@ Here you will find steps for installing/updating/customizing prometheus-controll
 
 ### Installing
 
-
-helm install prometheus-operator stable/prometheus-operator --namespace monitoring --set prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues=false --set prometheusOperator.tlsProxy.enabled=false --set prometheusOperator.nodeSelector."cloud\.google\.com/gke-nodepool"=system --set prometheus.prometheusSpec.nodeSelector."cloud\.google\.com/gke-nodepool"=system --set alertmanager.alertmanagerSpec.nodeSelector."cloud\.google\.com/gke-nodepool"=system --set kubeDns.enabled=true --set prometheusOperator.admissionWebhooks.enabled=false  --set prometheusOperator.admissionWebhooks.enabled=false --set prometheus.prometheusSpec.replicas=1 --set alertmanager.alertmanagerSpec.replicas=1 --set installCRDs=true -f prometheus-operator-testnet-values.yml
+helm install prometheus-operator prometheus-community/prometheus-operator --namespace monitoring --set prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues=false --set prometheusOperator.tlsProxy.enabled=false --set prometheusOperator.nodeSelector."cloud\.google\.com/gke-nodepool"=system --set prometheus.prometheusSpec.nodeSelector."cloud\.google\.com/gke-nodepool"=system --set alertmanager.alertmanagerSpec.nodeSelector."cloud\.google\.com/gke-nodepool"=system --set kubeDns.enabled=true --set prometheusOperator.admissionWebhooks.enabled=false  --set prometheusOperator.admissionWebhooks.enabled=false --set prometheus.prometheusSpec.replicas=1 --set alertmanager.alertmanagerSpec.replicas=1 --set installCRDs=true -f prometheus-operator-mainnet-values.yml
 
 
 ### Updating
 
+helm upgrade --install prometheus-operator prometheus-community/prometheus-operator --namespace monitoring --set prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues=false --set prometheusOperator.tlsProxy.enabled=false --set prometheusOperator.nodeSelector."cloud\.google\.com/gke-nodepool"=system --set prometheus.prometheusSpec.nodeSelector."cloud\.google\.com/gke-nodepool"=system --set alertmanager.alertmanagerSpec.nodeSelector."cloud\.google\.com/gke-nodepool"=system --set kubeDns.enabled=true --set prometheusOperator.admissionWebhooks.enabled=false  --set prometheusOperator.admissionWebhooks.enabled=false --set prometheus.prometheusSpec.replicas=1 --set alertmanager.alertmanagerSpec.replicas=1 --set installCRDs=true -f prometheus-operator-mainnet-values.yml
 
-helm upgrade --install prometheus-operator stable/prometheus-operator --namespace monitoring --set prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues=false --set prometheusOperator.tlsProxy.enabled=false --set prometheusOperator.nodeSelector."cloud\.google\.com/gke-nodepool"=system --set prometheus.prometheusSpec.nodeSelector."cloud\.google\.com/gke-nodepool"=system --set alertmanager.alertmanagerSpec.nodeSelector."cloud\.google\.com/gke-nodepool"=system --set kubeDns.enabled=true --set prometheusOperator.admissionWebhooks.enabled=false  --set prometheusOperator.admissionWebhooks.enabled=false --set prometheus.prometheusSpec.replicas=1 --set alertmanager.alertmanagerSpec.replicas=1 --set installCRDs=true -f prometheus-operator-testnet-values.yml
+
+### Post-install steps
+
+After finishing helm install. You need to change the ClusterIP service type of grafana to `Loadbalancer` in order to have your grafana accessed from the external network
+
+kubectl edit svc prometheus-operator-grafana -n monitoring
+
+Also, you need to install additional scraping configurations in order to prometheus to work 
+
+kustomize build --load_restrictor=none ../ | kubectl apply -f -
+
+
+### Uninstalling 
+
+helm uninstall prometheus-operator -n monitoring
 
 
 ### Customizing
