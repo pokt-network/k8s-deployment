@@ -19,7 +19,7 @@ spec:
       initContainers:
         - name: copy-configs
           image: google/cloud-sdk:313.0.0 
-          command: ['sh', '-c', 'cp /tmp/key/priv_val_key.json /tmp/node/node_key.json /home/app/.pocket/ && mkdir -p /home/app/.pocket/config/ && cp /tmp/*.json /home/app/.pocket/config/ && echo {} > /home/app/.pocket/priv_val_state.json   && echo "Verifying if data folder is not empty. If its not empty, this command exits and resume pocket run" && mkdir -p /home/app/.pocket/data/ && find /home/app/.pocket/data/ -maxdepth 0 -empty -exec echo {} is empty. \; | grep "empty" && echo "Downloading blockchain data" || exit 0 && cd /home/app/.pocket/data && rm -rf * &&  gsutil cp  gs://blockchains-data/pocket-network-mainnet-latest.tar ./pocket-network-mainnet.tar && echo "Downloaded pocket network blockchain.tar file now decompressing" && tar -xf pocket-network-mainnet.tar && rm  ./pocket-network-mainnet.tar && echo "deleted compressed file .. exiting"']
+          command: ['sh', '-c', 'cp /tmp/key/priv_val_key.json /tmp/node/node_key.json /home/app/.pocket/ && mkdir -p /home/app/.pocket/config/ && cp /tmp/*.json /home/app/.pocket/config/ && echo {} > /home/app/.pocket/priv_val_state.json   && echo "Verifying if data folder is not empty. If its not empty, this command exits and resume pocket run" && mkdir -p /home/app/.pocket/data/ && find /home/app/.pocket/data/ -maxdepth 0 -empty -exec echo {} is empty. \; | grep "empty" && echo "Downloading blockchain data" || exit 0 && cd /home/app/.pocket/data && rm -rf * && echo " Here configure your blockchain data folder to download and restore gsutil cp <yourblockchainfolder>  ./pocket-network-mainnet.tar" && echo "Downloaded pocket network blockchain.tar file now decompressing" && tar -xf pocket-network-mainnet.tar && rm  ./pocket-network-mainnet.tar && echo "deleted compressed file .. exiting"']
           volumeMounts:
             - mountPath: /home/app/.pocket
               name: pocket-core-data
@@ -35,7 +35,10 @@ spec:
             - --datadir=/home/app/.pocket 
             - --mainnet 
             - --keybase=false
-          image: gcr.io/pocket-core-mainnet/mainnet-container:a63e91d
+          image: poktnetwork/pocket:RC-0.5.2.9
+          env:
+          - name: GODEBUG
+            value: "madvdontneed=1"
           imagePullPolicy: Always
           ports:
             - containerPort: 26657
