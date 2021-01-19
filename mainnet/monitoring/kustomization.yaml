@@ -1,5 +1,6 @@
 resources:
   - ./blackbox.yaml
+  - ./loki-storageclass.yaml
 
 secretGenerator:
   - name: additional-scrape-configs
