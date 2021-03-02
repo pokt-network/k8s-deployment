@@ -80,7 +80,7 @@ items:
         securityContext:
           fsGroup: 1000
         containers:
-        - args: ["--base-path", ".ethereum", "--chain", "kovan", "--port", "30303", "--jsonrpc-hosts", "all", "--jsonrpc-cors", "all", "--jsonrpc-interface", "all", "--ipc-apis", "web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub", "--ws-interface", "all", "--ws-hosts", "all", "--ws-origins", "all", "--ws-apis", "web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub", "--interface", "all"]
+        - args: ["--base-path", ".ethereum", "--chain", "kovan", "--port", "30303", "--jsonrpc-hosts", "all", "--jsonrpc-cors", "all", "--jsonrpc-interface", "all", "--ipc-apis", "web3,net,eth,rpc", "--ws-interface", "all", "--ws-hosts", "all", "--ws-origins", "all", "--ws-apis", "web3,net,eth,rpc", "--interface", "all"]
           command: ["/bin/parity"]
           image: poktnetwork/poa-node:kovan
           imagePullPolicy: Always
