@@ -1,0 +1,150 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      app: poa-xdai
+    name: poa-xdai 
+  spec:
+    ports:
+    - name: "rpc"
+      port:  8545
+      targetPort: 8545
+    - name: "ws"
+      port: 8546
+      targetPort: 8546
+    - name: "p2p"
+      port: 30303 
+      targetPort: 30303
+    type: ClusterIP
+    selector:
+      app: poa-xdai 
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      app: poa-xdai
+    name: poa-xdai-external 
+  spec:
+    ports:
+    - name: "rpc"
+      port:  8545
+      targetPort: 8545
+    - name: "ws"
+      port: 8546
+      targetPort: 8546
+    - name: "p2p"
+      port: 30303 
+      targetPort: 30303
+    type: ExternalName
+    externalName: poa-xdai.blockchain.svc.cluster.local
+    selector:
+      app: poa-xdai 
+  status:
+    loadBalancer: {}
+- apiVersion: apps/v1 
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f ../../docker-compose/poa/docker-compose.yml
+        -o poa.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      app: poa-xdai
+    name: poa-xdai
+  spec:
+    replicas: 1
+    strategy:
+      type: Recreate
+    selector:
+      matchLabels:
+        app: poa-xdai
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: poa-xdai
+      spec:
+        securityContext:
+          fsGroup: 1000
+        containers:
+        - args: ["--base-path", ".xdai", "--chain", "xdai", "--port", "30303", "--jsonrpc-hosts", "all", "--jsonrpc-cors", "all", "--jsonrpc-interface", "all", "--ipc-apis", "web3,net,eth,rpc", "--ws-interface", "all", "--ws-hosts", "all", "--ws-origins", "all", "--ws-apis", "web3,net,eth,rpc", "--interface", "all", "--no-warp"]
+          image: poktnetwork/openethereum:xdai
+          imagePullPolicy: Always
+          name: poa-core
+          resources:
+            limits:
+              cpu: "1000m"
+              memory: "4Gi"
+            requests:
+              cpu: "500m"
+              memory: "2Gi"
+          volumeMounts:
+          - mountPath: /home/openethereum/.xdai 
+            name: poa-xdai
+          ports:
+          - name: rpc
+            containerPort: 8545
+          - name: ws 
+            containerPort: 8546
+          - name: p2p
+            containerPort: 30303  
+        restartPolicy: Always
+        nodeSelector:
+          cloud.google.com/gke-nodepool: blockchain-nodes
+        volumes:
+        - name: poa-xdai
+          persistentVolumeClaim:
+            claimName: poa-xdai
+  status: {}
+- apiVersion: storage.k8s.io/v1
+  kind: StorageClass
+  metadata:
+    name: poa-xdai
+  provisioner: pd.csi.storage.gke.io 
+  allowVolumeExpansion: true
+  parameters:
+    type: pd-balanced
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    name: poa-xdai
+  spec:
+    storageClassName: "poa-xdai"
+    capacity:
+      storage: 100G
+    accessModes:
+      - ReadWriteOnce
+    claimRef:
+      namespace: blockchain
+      name: poa-xdai
+    gcePersistentDisk:
+      pdName: poa-xdai
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: poa-xdai
+    labels:
+      failure-domain.beta.kubernetes.io/zone: us-east1-b
+  spec:
+    storageClassName: poa-xdai
+    resources:
+      requests:
+        storage: 100G
+    accessModes:
+      - ReadWriteOnce
+
+kind: List
+metadata: {}
