@@ -62,7 +62,7 @@
             "AddrBook": "config/addrbook.json",
             "AddrBookStrict": false,
             "MaxNumInboundPeers": 10,
-            "MaxNumOutboundPeers": 10,
+            "MaxNumOutboundPeers": 30,
             "UnconditionalPeerIDs": "",
             "PersistentPeersMaxDialPeriod": 0,
             "FlushThrottleTimeout": 100000000,
@@ -96,7 +96,7 @@
             "MaxTxBytes": 1048576
         },
         "FastSync": {
-            "Version": "v1"
+            "Version": "v0"
         },
         "Consensus": {
             "RootDir": "/home/app/.pocket",
