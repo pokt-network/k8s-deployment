@@ -18,8 +18,8 @@ spec:
     spec:
       initContainers:
         - name: copy-configs
-          image: google/cloud-sdk:313.0.0 
-          command: ['sh', '-c', 'cp /tmp/key/priv_val_key.json /tmp/node/node_key.json /home/app/.pocket/ && mkdir -p /home/app/.pocket/config/ && cp /tmp/*.json /home/app/.pocket/config/ && echo {} > /home/app/.pocket/priv_val_state.json   && echo "Verifying if data folder is not empty. If its not empty, this command exits and resume pocket run" && mkdir -p /home/app/.pocket/data/ && find /home/app/.pocket/data/ -maxdepth 0 -empty -exec echo {} is empty. \; | grep "empty" && echo "Downloading blockchain data" || exit 0 && cd /home/app/.pocket/data && rm -rf * && echo " Here configure your blockchain data folder to download and restore gsutil cp <yourblockchainfolder>  ./pocket-network-mainnet.tar" && echo "Downloaded pocket network blockchain.tar file now decompressing" && tar -xf pocket-network-mainnet.tar && rm  ./pocket-network-mainnet.tar && echo "deleted compressed file .. exiting"']
+          image: poktnetwork/pocket:Beta-0.6.4 
+          command: ['sh', '-c', 'cp /tmp/key/priv_val_key.json /tmp/node/node_key.json /home/app/.pocket/ && mkdir -p /home/app/.pocket/config/ && cp /tmp/*.json /home/app/.pocket/config/ && echo {} > /home/app/.pocket/priv_val_state.json && echo "Verifying if data folder is not empty. If its not empty, this command exits and resume pocket run" && mkdir -p /home/app/.pocket/data/ && find /home/app/.pocket/data/ -maxdepth 0 -empty -exec echo {} is empty. \; | grep "empty" && echo "Downloading blockchain data" || exit 0 && cd /home/app/.pocket/data && curl -o pocket-network-mainnet.tar https://storage.googleapis.com/blockchains-data/pocket-network-mainnet-latest-6.3.tar && echo "Downloaded pocket network blockchain.tar file now decompressing" && tar -xf pocket-network-mainnet.tar && rm  ./pocket-network-mainnet.tar && echo "deleted compressed file .. exiting']
           volumeMounts:
             - mountPath: /home/app/.pocket
               name: pocket-core-data
